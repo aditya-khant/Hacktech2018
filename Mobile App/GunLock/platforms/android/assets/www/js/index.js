@@ -1,46 +1,100 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
+var ons = require('onsenui.min.js');
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
-    },
+main();
 
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+//main function
+function main() {
+    setPlatform();
+    
+    reqPrices();
+}
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
+// Set Platform
+function setPlatform() {
+    if (!ons.platform.isIOS()) {
+        ons.platform.select("android");
     }
-};
+}
+//Connect and Push Page-Controller
+document.addEventListener('init', function(event) {
+    var page = event.target;
+  
+    if (page.id === 'start') {
+      page.querySelector('#push-button').onclick = function() {
+        document.querySelector('#myNavigator').pushPage('page2.html', {data: {title: 'Page 2'}});
+      };
+    } else if (page.id === 'page2') {
+      page.querySelector('ons-toolbar .center').innerHTML = page.data.title;
+    }
+  });
 
-app.initialize();
+//Dictionaries
+
+var getResults = {};
+var pushingdict = {};
+var currentPage = 0;
+
+
+document.addEventListener('show', function (event) {
+    var page = event.target;
+
+    if (page.id == "Settings") {
+        currentPage = 1;
+        appendToList();
+       
+    };
+
+    if (page.id == "Flex") {
+        createPreferences();
+       
+    }
+
+
+});
+
+function appendToList() {
+
+    for (x = 0; x < rawData.length; x++) {
+        var i = document.getElementById("myList");
+        var c = document.createElement("ons-list-item");
+        var dict = rawData[x];
+        var name = dict["name"];
+        var calories = dict["calories"];
+        var price = dict["price"];
+        c.innerHTML = '<div class="center">' +
+            name +
+            '<br> $' + price +
+            '<br> ' + calories + ' calories' +
+            '</div>' +
+            '<div class="right">' +
+            '<ons-row>' +
+
+            '<ons-col>' +
+            '<ons-range style="width: 100px;" value="0"; id="slider' + x + '"></ons-range>' +
+
+            '</ons-col>' +
+            '</ons-row>' +
+            '</div>' +
+            '<div class="right">' +
+            '<ons-switch id="switch' + x + '"></ons-switch>' +
+            '</div>'
+
+        '<ons-list-item>' +
+        '<div class="center">'
+
+        i.appendChild(c);
+    }
+}
+
+//BLE Successes and Failure
+function BLEFuncs(){
+    ble.isEnabled(success, failure);
+}   
+
+var isEnabledSuccess = function(){
+    //Do something
+}
+
+var isEnabledFail = function(){
+    ble.enable();
+}

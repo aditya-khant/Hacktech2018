@@ -9,6 +9,12 @@
   "installed_plugins": {
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.akkthedev.gunlock"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.akkthedev.gunlock"
+    },
+    "cordova-plugin-ble-central": {
+      "PACKAGE_NAME": "com.akkthedev.gunlock"
     }
   },
   "dependent_plugins": {}

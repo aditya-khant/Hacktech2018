@@ -1,5 +1,5 @@
 var ons = require('onsenui.min.js');
-
+var bleList = []
 
 main();
 
@@ -20,10 +20,11 @@ function setPlatform() {
 document.addEventListener('init', function(event) {
     var page = event.target;
   
-    if (page.id === 'page1') {
-      page.querySelector('#push-button').onclick = function() {
+    if (page.id === 'start') {
+      page.querySelector('#push-button').onclick = BLEFuncs;
+      /*function() {
         document.querySelector('#myNavigator').pushPage('page2.html', {data: {title: 'Page 2'}});
-      };
+      };*/
     } else if (page.id === 'page2') {
       page.querySelector('ons-toolbar .center').innerHTML = page.data.title;
     }
@@ -34,11 +35,6 @@ document.addEventListener('init', function(event) {
 var getResults = {};
 var pushingdict = {};
 var currentPage = 0;
-
-
-//Get items ajax req
-
-
 
 
 document.addEventListener('show', function (event) {
@@ -58,6 +54,15 @@ document.addEventListener('show', function (event) {
 
 });
 
+function appendList(device){
+    var i = document.getElementById("myList");
+    var c = document.createElement("ons-list-item");
+    c.innerHTML = "";
+    i.appendChild(c);
+
+}
+
+/*
 function appendToList() {
 
     for (x = 0; x < rawData.length; x++) {
@@ -90,4 +95,30 @@ function appendToList() {
 
         i.appendChild(c);
     }
+}
+*/
+
+//BLE Successes and Failure
+function BLEFuncs(){
+    ble.isEnabled(isEnabledSuccess, isEnabledFail);
+}   
+
+var isEnabledSuccess = function(){
+    ble.scan([],60, scanSuccess, function(){
+        alert("No devices found")
+    });
+}
+
+function scanSuccess(device){
+    appendToList(device);
+    bleList += device;
+
+}
+
+
+
+var isEnabledFail = function(){
+    ble.enable(isEnabledSuccess, function(){
+        alert("Please enable your bluetooth and retry")
+    });
 }
