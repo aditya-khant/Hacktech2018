@@ -57,7 +57,10 @@ document.addEventListener('show', function (event) {
 function appendList(device){
     var i = document.getElementById("myList");
     var c = document.createElement("ons-list-item");
-    c.innerHTML = "";
+    c.setAttribute("tappable");
+    c.setAttribute("modifier","chevron");
+    c.setAttribute("id", device.id);
+    c.innerHTML = device.name;
     i.appendChild(c);
 
 }
@@ -112,10 +115,9 @@ var isEnabledSuccess = function(){
 function scanSuccess(device){
     appendToList(device);
     bleList += device;
+    document.getElementByID(device.id).addEventListener("click", function(){alert("it works")});
 
 }
-
-
 
 var isEnabledFail = function(){
     ble.enable(isEnabledSuccess, function(){
